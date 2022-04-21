@@ -11,3 +11,6 @@ jobs:
     uses: boegholm/Workflows/.github/workflows/BuildTestPackPushv6.yml@master
     with:
       projects: "['FTypBoxReader/FTypBoxReader.csproj']"
+    secrets:
+      nuser: ${{ secrets.NUSER }}
+      npass: ${{ secrets.NPASS }}
