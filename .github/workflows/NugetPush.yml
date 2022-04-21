@@ -14,3 +14,6 @@ jobs:
     secrets:
       nuser: ${{ secrets.NUSER }}
       npass: ${{ secrets.NPASS }}
+      NUGET_KEY: ${{ secrets.NUGET_KEY }}
+      NUGET_SOURCE: ${{ secrets.NUGET_SOURCE }}
+      NUGET_SYM_SOURCE: ${{ secrets.NUGET_SYM_SOURCE }}
