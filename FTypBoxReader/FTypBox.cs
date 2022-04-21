@@ -9,7 +9,11 @@ namespace FTypBoxReader
         {
             Type = type;
             Size = size;
-            MajorBrand = Encoding.ASCII.GetString(buf.Slice(8, 4).ToArray());
+            MajorBrand = Encoding.ASCII.GetString(buf.Slice(0, 4).ToArray());
+            var versionbuf = buf.Slice(4,4).ToArray();
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(versionbuf);
+            MinorVersion = BitConverter.ToUInt32(versionbuf);
             for (int i = 8; i < size; i += 4)
             {
                 _compatibleBrands.Add(Encoding.ASCII.GetString(buf.Slice(i, 4).ToArray()));

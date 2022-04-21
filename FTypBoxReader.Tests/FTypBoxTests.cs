@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using FTypBoxReader.Tests.Properties;
 using Xunit;
@@ -8,7 +9,7 @@ namespace FTypBoxReader.Tests
     // Test images from https://github.com/tigranbs/test-heic-images
     public class FTypBoxTests
     {
-          public static TheoryData<Stream> HeicSources => new()
+        public static TheoryData<Stream> HeicSources => new()
         {
             { new MemoryStream(Resources.image1) },
             { new MemoryStream(Resources.image2) },
@@ -23,18 +24,47 @@ namespace FTypBoxReader.Tests
 
         [Theory]
         [MemberData(nameof(HeicSources))]
+        public async Task TryReadFTypBoxAsync_LoadHeicPrimarilyHeic(Stream s)
+        {
+            var box = await LoadAndClose(s);
+            Assert.Equal("heic",box?.MajorBrand);
+        }
+
+
+        [Theory]
+        [MemberData(nameof(HeicSources))]
+        public async Task TryReadFTypBoxAsync_CompatibleBrandsContainsTwo(Stream s)
+        {
+            var box = await LoadAndClose(s);
+            Assert.Equal(2, box?.CompatibleBrands.Count());
+        }
+
+        [Theory]
+        [MemberData(nameof(HeicSources))]
+        public async Task TryReadFTypBoxAsync_CompatibleBrandsContainsMif1(Stream s)
+        {
+            var box = await LoadAndClose(s);
+            Assert.True(box?.CompatibleBrands.Any(v => v.Equals("mif1"))); ;
+        }
+        [Theory]
+        [MemberData(nameof(HeicSources))]
         public async Task TestHeicFTypBoxLoad_Success(Stream s)
+        {
+            var box = await LoadAndClose(s);
+            Assert.NotNull(box);
+        }
+        private async Task<FTypBox?> LoadAndClose(Stream s)
         {
             try
             {
-                var box = await FTypBox.TryReadFTypBoxAsync(s);
-                Assert.NotNull(box);
+                return await FTypBox.TryReadFTypBoxAsync(s);
             }
             finally
             {
-                if(s!=null)
+                if (s != null)
                     await s.DisposeAsync();
             }
+
         }
     }
 }
