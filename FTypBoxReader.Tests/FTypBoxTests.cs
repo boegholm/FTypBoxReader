@@ -7,9 +7,17 @@ using Xunit;
 namespace FTypBoxReader.Tests
 {
     // Test images from https://github.com/tigranbs/test-heic-images
-    public class FTypBoxTests
+    public class FTypBoxTestsu
     {
         public static TheoryData<Stream> HeicSources => new()
+        {
+            { new MemoryStream(Resources.image1) },
+            { new MemoryStream(Resources.image2) },
+            { new MemoryStream(Resources.image3) },
+            { new MemoryStream(Resources.image4) },
+        };
+        
+        public static TheoryData<Stream> MaliciousHeicImages => new()
         {
             { new MemoryStream(Resources.image1) },
             { new MemoryStream(Resources.image2) },
